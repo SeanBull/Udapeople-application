@@ -8,7 +8,6 @@ commands:
     parameters:
     steps:
       - slack/notify:
-          channel: GENERAL
           event: fail
           template: basic_fail_1
 
@@ -44,6 +43,7 @@ jobs:
           command: |
             cd backend
             npm install
+            ratratrat
             npm run build
       - save_cache:
           paths: [backend/node_modules]
