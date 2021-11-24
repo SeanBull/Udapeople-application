@@ -22,29 +22,25 @@ commands:
           custom: |
             {
               "text": "CircleCI job succeeded!",
-              "blocks": [
-                {
+              "blocks": [{
                   "type": "section",
-                  "fields": [
-                    {
-                      "type": "header",
-                      "text": "The workflow ran :successfully: :) ",
-                      "emoji": true
-                    }
+                  "fields": [{
+                    "type": "header",
+                    "text": "The workflow ran :successfully: :) ",
+                    "emoji": true
+                  }]
                 },
                 {
                   "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Job"
-                      },
-                      "url": "${CIRCLE_BUILD_URL}"
-                    }],
+                  "elements": [{
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Job"
+                    },
+                    "url": "${CIRCLE_BUILD_URL}"
+                  }]
                 }
-
               ]
             }
 
