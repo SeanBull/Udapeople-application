@@ -18,7 +18,7 @@ commands:
     steps:
       - slack/notify:
           channel: p3
-          event: fail
+          event: pass
           # template: success_tagged_deploy_1
           # using a custom message for fun
           custom: |
@@ -149,6 +149,11 @@ jobs:
             npm install 
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+
+  notifier:
+    docker:
+      - image: cimg/base:stable
+    steps:
       - notify-slacked-pass
 
 workflows:
@@ -164,3 +169,7 @@ workflows:
           requires: [test-frontend]
       - scan-backend:
           requires: [test-backend]
+      - notifier
+          requires: 
+            - scan-backend
+            - scan-frontend
