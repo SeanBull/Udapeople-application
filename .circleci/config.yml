@@ -22,13 +22,22 @@ commands:
           custom: |
             {
               "text": "CircleCI job succeeded!",
-              "blocks": [{
-                  "type": "section",
-                  "fields": [{
+              "blocks": [
+                {
                     "type": "header",
-                    "text": "The workflow ran :successfully: :) ",
-                    "emoji": true
-                  }]
+                    "text": {
+                      "type": "plain_text"
+                      "text": "The workflow ran :successfully: :) ",
+                      "emoji": true
+                    }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "welldone sir"
+                    },
                 },
                 {
                   "type": "actions",
