@@ -33,21 +33,22 @@ commands:
                       "text": "The workflow ran :successfully: :) ",
                       "emoji": true
                     }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Job"
-                      },
-                      "url": "${CIRCLE_BUILD_URL}"
-                    }
                 }
               ]
             }
+
+# {
+#   "type": "actions",
+#   "elements": [
+#     {
+#       "type": "button",
+#       "text": {
+#         "type": "plain_text",
+#         "text": "View Job"
+#       },
+#       "url": "${CIRCLE_BUILD_URL}"
+#     }
+# }
 
 jobs:
   build-frontend:
