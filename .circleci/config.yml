@@ -65,7 +65,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - notify-slacked-failed
+      - notify-slacked-fail
 
   build-backend:
     docker:
