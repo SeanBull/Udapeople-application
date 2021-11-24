@@ -26,7 +26,7 @@ commands:
                 {
                     "type": "header",
                     "text": {
-                      "type": "plain_text"
+                      "type": "plain_text",
                       "text": "The workflow ran :successfully: :) ",
                       "emoji": true
                     }
@@ -37,7 +37,7 @@ commands:
                     {
                       "type": "plain_text",
                       "text": "welldone sir"
-                    },
+                    }]
                 },
                 {
                   "type": "actions",
