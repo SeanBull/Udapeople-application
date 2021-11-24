@@ -169,7 +169,7 @@ workflows:
           requires: [test-frontend]
       - scan-backend:
           requires: [test-backend]
-      - notifier
-          requires: 
+      - notifier:
+          requires:
             - scan-backend
             - scan-frontend
