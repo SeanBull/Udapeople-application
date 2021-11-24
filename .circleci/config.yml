@@ -19,38 +19,34 @@ commands:
       - slack/notify:
           channel: general
           event: pass
-            custom: |
-              {
-                "text": "CircleCI job succeeded!",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "header",
-                        "text": "The workflow ran :successfully: :) ",
-                        "emoji": true
-                      }
-                  },
-                  {
-                    "type": "actions",
-                    "elements": [
-                      {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "View Job"
-                        },
-                        "url": "${CIRCLE_BUILD_URL}"
+          custom: |
+            {
+              "text": "CircleCI job succeeded!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "header",
+                      "text": "The workflow ran :successfully: :) ",
+                      "emoji": true
                     }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
                   }
+                }
 
-                ]
-              }
-
-
-
-
+              ]
+            }
 
           # template: success_tagged_deploy_1
 jobs:
