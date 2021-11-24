@@ -1,6 +1,16 @@
 version: 2.1
 
-# commands:
+orbs:
+  slack: circleci/slack@4.1
+commands:
+  notify-slacked:
+    description: this is the slacked command to notify of failed runs
+    parameters:
+    steps:
+      - slack/notify:
+          channel: GENERAL
+          event: fail
+          template: basic_fail_1
 
 jobs:
   build-frontend:
@@ -14,11 +24,13 @@ jobs:
           name: Build front-end
           command: |
             cd frontend
+            ratratrat
             npm install
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - notify-slacked
 
   build-backend:
     docker:
