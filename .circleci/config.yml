@@ -32,7 +32,8 @@ commands:
                       "type": "header",
                       "text": "The workflow ran :successfully: :) ",
                       "emoji": true
-                    },
+                    }
+                },
                 {
                   "type": "actions",
                   "elements": [
