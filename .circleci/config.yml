@@ -115,6 +115,17 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
+  notifications:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+
 workflows:
   default:
     jobs:
@@ -128,3 +139,5 @@ workflows:
           requires: [test-frontend]
       - scan-backend:
           requires: [test-backend]
+      - notifications:
+          requires: [scan-backend]
