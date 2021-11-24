@@ -9,7 +9,7 @@ commands:
     parameters:
     steps:
       - slack/notify:
-          channel: p3
+          channel: general
           event: fail
           template: basic_fail_1
   notify-slacked-pass:
@@ -17,7 +17,7 @@ commands:
     parameters:
     steps:
       - slack/notify:
-          channel: p3
+          channel: general
           event: pass
           # template: success_tagged_deploy_1
           # using a custom message for fun
@@ -160,17 +160,17 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [test-frontend]
-      - scan-backend:
-          requires: [test-backend]
-      - notifier:
-          requires:
-            - scan-backend
-            - scan-frontend
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [test-frontend]
+      # - scan-backend:
+      #     requires: [test-backend]
+      - notifier
+        # requires:
+        #   - scan-backend
+        #   - scan-frontend
