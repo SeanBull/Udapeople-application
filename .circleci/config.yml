@@ -42,7 +42,7 @@ commands:
                         "text": "View Job"
                       },
                       "url": "${CIRCLE_BUILD_URL}"
-                  }
+                    }],
                 }
 
               ]
