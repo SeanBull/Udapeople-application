@@ -213,6 +213,27 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment
 
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - add_ssh_keys:
+          # You can get this ID in the section where you registered the SSH Key
+          fingerprints: ["0a:fb:a8:9d:03:49:e6:1c:0e:20:90:5b:19:59:0c:fd"]
+      - run:
+          name: Install Dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar gzip awscli -y
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/roles/inventory
+      # Here's where you will add some code to rollback on failure
+
 workflows:
   default:
     jobs:

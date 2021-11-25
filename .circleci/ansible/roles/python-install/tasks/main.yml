@@ -1,0 +1,4 @@
+---
+- name: Install Python if not there
+  raw: apt -y update && apt install -y python-minimal
+  when: check_python.rc != 0
