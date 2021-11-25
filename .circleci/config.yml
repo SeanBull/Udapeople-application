@@ -227,7 +227,7 @@ jobs:
           name: Install Dependencies
           command: |
             apk add --update ansible
-            apk add --update tar gzip awscli -y
+            apk add --update tar gzip awscli
       - run:
           name: Run Playbook and Configure server
           command: |
@@ -237,23 +237,23 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [test-frontend]
-      - scan-backend:
-          requires: [test-backend]
-      - notifier:
-          requires:
-            - scan-backend
-            - scan-frontend
-      - deploy-infrastructure:
-          requires:
-            - notifier
-      - configure-infrastructure:
-          requires:
-            - deploy-infrastructure
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [test-frontend]
+      # - scan-backend:
+      #     requires: [test-backend]
+      # - notifier:
+      #     requires:
+      #       - scan-backend
+      #       - scan-frontend
+      # - deploy-infrastructure:
+      #     requires:
+      #       - notifier
+      - configure-infrastructure
+        # requires:
+        #   - deploy-infrastructure
