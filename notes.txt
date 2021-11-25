@@ -1,0 +1,9 @@
+Endpoint (Hostname): udacity-3.cjgkqgbewug2.us-east-1.rds.amazonaws.com
+Instance identifier: udacity-3 //This is not the database name
+Database name: udacity_3
+Username: postgres
+Password: Tractor1  
+Port: 5432
+
+
+random string: udapeople-hh33h
