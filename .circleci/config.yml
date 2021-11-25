@@ -254,3 +254,6 @@ workflows:
       - deploy-infrastructure:
           requires:
             - notifier
+      - configure-infrastructure:
+          requires:
+            - deploy-infrastructure
