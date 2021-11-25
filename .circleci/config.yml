@@ -180,6 +180,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: install tar and gzip
+          command: |
+            apk add tar
+            apk add gzip
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
