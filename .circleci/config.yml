@@ -234,7 +234,38 @@ jobs:
           name: Run Playbook and Configure server
           command: |
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/roles/inventory
-      # Here's where you will add some code to rollback on failure
+      - destroy-environment
+
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [run-migrations]
+      - run:
+      - run:
+          name: Run migrations
+          command: |
+             cd backend
+            npm install
+            # Run and sve the migration output
+            npm run migrations > migrations_dump.txt
+      - run:
+          name: Send migration results to memstash
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+              curl -H "Content-Type: text/plain" -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
+     # Here's where you will add some code to rollback on failure  
+
+
+
+
+
+
+
 
 workflows:
   default:
@@ -259,3 +290,7 @@ workflows:
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
+      - run-migrations:
+          requires:
+            - configure-infrastructure
+
