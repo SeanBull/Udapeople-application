@@ -182,8 +182,8 @@ jobs:
       - run:
           name: install tar and gzip
           command: |
-            yum install tar
-            yum install gzip
+            yum install tar -y
+            yum install gzip -y
       - run:
           name: Ensure back-end infrastructure exists
           command: |
