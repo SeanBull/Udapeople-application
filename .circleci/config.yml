@@ -221,7 +221,6 @@ jobs:
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
-          # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["0a:fb:a8:9d:03:49:e6:1c:0e:20:90:5b:19:59:0c:fd"]
       - run:
           name: Install Dependencies
@@ -247,7 +246,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
-             cd backend
+            cd backend
             npm install
             # Run and sve the migration output
             npm run migrations > migrations_dump.txt
@@ -258,7 +257,7 @@ jobs:
             then
               curl -H "Content-Type: text/plain" -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
-     # Here's where you will add some code to rollback on failure  
+     - destroy-environment 
 
 
 
