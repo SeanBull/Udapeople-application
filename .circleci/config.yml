@@ -231,5 +231,5 @@ workflows:
             - scan-backend
             - scan-frontend
       - deploy-infrastructure:
-        requires:
-          - notifier
+          requires:
+            - notifier
