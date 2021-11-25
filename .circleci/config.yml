@@ -256,14 +256,7 @@ jobs:
             then
               curl -H "Content-Type: text/plain" -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
-     - destroy-environment 
-
-
-
-
-
-
-
+      - destroy-environment
 
 workflows:
   default:
@@ -291,4 +284,3 @@ workflows:
       - run-migrations:
           requires:
             - configure-infrastructure
-
