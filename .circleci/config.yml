@@ -179,13 +179,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install tar and gzip
-          command: |
-            sudo apt-get update
-            sudo apt-get upgrade
-            sudo apt-get tar
-            sudo apt-get gzip
-      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
