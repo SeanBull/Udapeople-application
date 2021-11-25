@@ -227,7 +227,9 @@ jobs:
           name: Install Dependencies
           command: |
             apk add --update ansible
-            apk add --update tar gzip awscli
+            apk add --update tar gzip
+            pip3 install --upgrade pip
+            pip3 install awscli
       - run:
           name: Run Playbook and Configure server
           command: |
