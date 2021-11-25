@@ -243,7 +243,6 @@ jobs:
       - restore_cache:
           keys: [run-migrations]
       - run:
-      - run:
           name: Run migrations
           command: |
             cd backend
