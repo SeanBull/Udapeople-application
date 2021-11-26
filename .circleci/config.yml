@@ -15,6 +15,16 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
+  success-clean-up:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+    steps:
+      - run:
+          name: Destroy environment
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+
   notify-slacked-fail:
     description: this is the slacked command to notify of failed runs
     parameters:
@@ -111,7 +121,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       # Your job code here
       - run:
           name: frontend npm test
@@ -129,7 +139,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-buil]
       # Your job code here
       - run:
           name: backend npm test
@@ -144,7 +154,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-scan]
+          keys: [frontend-build]
       - run:
           name: scan front end npm
           command: |
@@ -159,7 +169,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-scan]
+          keys: [backend-build]
       - run:
           name: scan back end npm
           command: |
@@ -240,7 +250,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [run-migrations]
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
