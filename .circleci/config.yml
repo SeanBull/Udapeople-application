@@ -15,6 +15,24 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
+  revert-migration:
+    description: Revert migration .
+    steps:
+      - run:
+          name: revert migration
+          when: on_fail
+          command: |
+            HAS_MIGRATION_RUN=$(curl -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if $HAS_MIGRATION_RUN = "true"
+              then
+                cd /home/circleci/project/backend
+                echo "Reverting migrations"
+                npm run migrations:revert
+              else
+                echo "No migrations have occured"
+                return 0
+            fi
+
   success-clean-up:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -279,12 +297,16 @@ jobs:
             then
               curl -H "Content-Type: text/plain" -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
+      - destroy-environment
+      - revert-migration
 
   deploy-frontend:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install curl, tar and gzip
           command: |
@@ -305,6 +327,26 @@ jobs:
           command: |
             echo installing awscli
             pip install awscli
+      - run:
+          name: Getting backend-URL
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} )
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: building npm
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment
+      - revert-migration
 
   clean-up:
     docker:
@@ -321,12 +363,12 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
       # - scan-frontend:
       #     requires: [test-frontend]
       # - scan-backend:
@@ -335,20 +377,15 @@ workflows:
       #     requires:
       #       - scan-backend
       #       - scan-frontend
-      # - deploy-infrastructure:
-      #     requires:
-      #       # - notifier
-      #       - build-backend
-      #       - build-frontend
-      # - configure-infrastructure:
-      #     requires:
-      #       - deploy-infrastructure
-      # - run-migrations:
-      #     requires:
-      #       - configure-infrastructure
-
-      # - clean-up:
-      #     requires:
-      #       - run-migrations
-
+      - deploy-infrastructure:
+          requires:
+            # - notifier
+            - build-backend
+            - build-frontend
+      - configure-infrastructure:
+          requires:
+            - deploy-infrastructure
+      - run-migrations:
+          requires:
+            - configure-infrastructure
       - deploy-frontend
