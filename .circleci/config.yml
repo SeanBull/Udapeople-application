@@ -280,6 +280,32 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: b0fae3e2-f972-4983-a33e-5f08e59d0506" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
 
+  deploy-frontend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: Install curl, tar and gzip
+          command: |
+            echo installing curl, tar and gzip
+            apk add --update tar gzip curl
+      - run:
+          name: Install ansible
+          command: |
+            echo Installing ansisble
+            apk add --update ansible
+      - run:
+          name: Install nodejs and npm
+          command: |
+            echo installing nodejs and npm
+            apk add --update nodejs npm
+      - run:
+          name: Install aws cli
+          command: |
+            echo installing awscli
+            pip install awscli
+
   clean-up:
     docker:
       - image: amazon/aws-cli
@@ -295,8 +321,8 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
+      # - build-frontend
+      # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
@@ -309,31 +335,20 @@ workflows:
       #     requires:
       #       - scan-backend
       #       - scan-frontend
-      - deploy-infrastructure:
-          requires:
-            # - notifier
-            - build-backend
-            - build-frontend
-      - configure-infrastructure:
-          requires:
-            - deploy-infrastructure
-      - run-migrations:
-          requires:
-            - configure-infrastructure
+      # - deploy-infrastructure:
+      #     requires:
+      #       # - notifier
+      #       - build-backend
+      #       - build-frontend
+      # - configure-infrastructure:
+      #     requires:
+      #       - deploy-infrastructure
+      # - run-migrations:
+      #     requires:
+      #       - configure-infrastructure
 
-      - clean-up:
-          requires:
-            - run-migrations
+      # - clean-up:
+      #     requires:
+      #       - run-migrations
 
-            # npm install oauth-sign
-            #             echo "BUILDING THE BACKEND ENVIRONMENT FILE FOR POSTGRES MIGRATIONS"
-            # echo ENVIROMENT=production > .env
-            # echo TYPEORM_CONNECTION=postgres >> .env
-            # echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> .env
-            # echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> .env
-            # echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> .env
-            # echo TYPEORM_HOST=$TYPEORM_HOST >> .env
-            # echo TYPEORM_PORT=$TYPEORM_PORT >> .env
-            # echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
-            # echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
-            # echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
+      - deploy-frontend
