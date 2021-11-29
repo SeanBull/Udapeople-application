@@ -275,6 +275,7 @@ jobs:
             npm install 
             npm install oauth-sign 
             npm run migrations > migrations_dump.txt
+            cat migrations_dump.txt
       - run:
           name: Send migration results to memstash
           command: |
@@ -317,10 +318,10 @@ workflows:
             # - notifier
             - build-backend
             - build-frontend
-      - clean-up:
-          type: approval
-          requires:
-            - deploy-infrastructure
+      # - clean-up:
+      #     type: approval
+      #     requires:
+      #       - deploy-infrastructure
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
