@@ -266,15 +266,15 @@ jobs:
 
   clean-up:
     docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout
-        - run:
-            name: install tar and gzip
-            command: |
-              yum install tar -y
-              yum install gzip -y
-        - success-clean-up
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: install tar and gzip
+          command: |
+            yum install tar -y
+            yum install gzip -y
+      - success-clean-up
 
 workflows:
   default:
@@ -306,4 +306,3 @@ workflows:
       - run-migrations:
           requires:
             - configure-infrastructure
-      
