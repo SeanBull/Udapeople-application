@@ -388,6 +388,6 @@ workflows:
       - run-migrations:
           requires:
             - configure-infrastructure
-      - deploy-frontend
+      - deploy-frontend:
           requires:
             - run-migrations
