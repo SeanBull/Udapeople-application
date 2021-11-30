@@ -389,8 +389,8 @@ jobs:
             npm run build
             cd ..
             ls -la
-            tar -C backend -czvf /zip/artifact.tar.gz
-            chmod 644 /zip/artifact.tar.gz
+            tar -C backend -czvf artifact.tar.gz .
+            chmod 644 artifact.tar.gz
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
