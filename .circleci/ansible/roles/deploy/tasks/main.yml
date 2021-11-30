@@ -7,13 +7,13 @@
 - name: "deploy backend"
   become_user: true
   unarchive:
-    src: ~/artifact.tar.gz
-    dest: ~/udapeople-backend
+    src: artifact.tar.gz
+    dest: ~/
 
 - name: "run backend"
   become_user: true
   shell: |
-    cd ~/udapeople-backend
+    cd ~/
     ls -la
     npm i
     pm2 start npm -- run start
