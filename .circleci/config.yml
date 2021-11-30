@@ -393,8 +393,8 @@ jobs:
             chmod 644 artifact.tar.gz
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
 
-      - destroy-environment
-      - revert-migration
+      # - destroy-environment
+      # - revert-migration
 
   clean-up:
     docker:

@@ -1,13 +1,8 @@
 ---
-- name: "show me what you got"
-  become_user: true
-  shell: |
-    ls -la
-
 - name: "deploy backend"
   become_user: true
   unarchive:
-    src: artifact.tar.gz
+    src: /artifact.tar.gz
     dest: ~/
 
 - name: "run backend"
