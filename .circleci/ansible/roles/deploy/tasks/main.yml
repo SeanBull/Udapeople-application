@@ -9,5 +9,6 @@
   become_user: true
   shell: |
     cd ~/udapeople-backend
+    ls -la
     npm i
     pm2 start npm -- run start
