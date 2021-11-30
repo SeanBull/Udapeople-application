@@ -357,6 +357,8 @@ jobs:
           fingerprints: ["81:62:13:7a:76:7e:6f:c6:0d:6a:79:9b:9a:a3:58:c0"]
       - attach_workspace:
           at: ~/
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Install curl, tar and gzip
           command: |
@@ -384,8 +386,8 @@ jobs:
             npm i
             npm run build
             cd ..
-            gzip -k -r ./backend
-            tar -C backend -czvf artifact.tar.gz .
+            gzip -r ./backend ./backend.gz
+            tar -C backend.gz -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
