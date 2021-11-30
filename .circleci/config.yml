@@ -12,7 +12,7 @@ commands:
           name: Destroy environment
           when: on_fail
           command: |
-            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive --Force
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -383,12 +383,14 @@ jobs:
       - run:
           name: Getting backend-URL
           command: |
+            ls -la
             cd backend
             npm i
             npm run build
             cd ..
-            tar -C backend -czvf artifact.tar.gz .
-            chmod 644 /artifact.tar.gz
+            ls -la
+            tar -C backend -czvf /zip/artifact.tar.gz .
+            chmod 644 /zip/artifact.tar.gz
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt

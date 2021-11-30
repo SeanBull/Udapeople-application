@@ -2,12 +2,12 @@
 - name: "deploy backend"
   become_user: true
   unarchive:
-    src: /artifact.tar.gz
-    dest: ~/
+    src: /zip/artifact.tar.gz
+    dest: ~/udapeople-backend
 
 - name: "run backend"
   become_user: true
   shell: |
-    cd ~
+    cd ~/udapeople-backend
     npm i
     pm2 start npm -- run start
