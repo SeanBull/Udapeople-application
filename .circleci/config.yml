@@ -348,6 +348,52 @@ jobs:
       - destroy-environment
       - revert-migration
 
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["81:62:13:7a:76:7e:6f:c6:0d:6a:79:9b:9a:a3:58:c0"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install curl, tar and gzip
+          command: |
+            echo installing curl, tar and gzip
+            apk add --update tar gzip curl
+      - run:
+          name: Install ansible
+          command: |
+            echo Installing ansisble
+            apk add --update ansible
+      - run:
+          name: Install nodejs and npm
+          command: |
+            echo installing nodejs and npm
+            apk add --update nodejs npm
+      - run:
+          name: Install aws cli
+          command: |
+            echo installing awscli
+            pip install awscli
+      - run:
+          name: Getting backend-URL
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            gzip -k -r ./backend
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
+      - destroy-environment
+      - revert-migration
+
   clean-up:
     docker:
       - image: amazon/aws-cli
@@ -374,6 +420,7 @@ workflows:
       # - scan-backend:
       #     requires: [test-backend]
       # - notifier:
+      # - notifier:
       #     requires:
       #       - scan-backend
       #       - scan-frontend
@@ -391,3 +438,6 @@ workflows:
       - deploy-frontend:
           requires:
             - run-migrations
+      - deploy-backend:
+          requires:
+            - deploy-frontend
