@@ -9,12 +9,17 @@ commands:
     parameters:
     steps:
       - run:
-          name: Destroy environment
+          name: remove files
           when: on_fail
-          command: |
-            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+          command: aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - run:
+          name: Delete Backend
+          when: on_fail
+          command: aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Delete Frontend
+          when: on_fail
+          command: aws cloudformation delete-stack --stack-name frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
   revert-migration:
     description: Revert migration .
@@ -427,42 +432,77 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
-              return 1
+              return 0
             else
               return 1
             fi
+      - destroy-environment
+      - revert-migration
 
-  clean-up:
+  cloudfront-update:
     docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: install tar and gzip
-          command: |
-            yum install tar -y
-            yum install gzip -y
-      - success-clean-up
+        - image: python:3.7-alpine3.11
+      steps:
+        - checkout
+        - default-configuration
+        - run: 
+            name: promote s3
+            command: |
+              aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
+  cleanup:
+    docker:
+        - image: python:3.7-alpine3.11
+      steps:
+        - checkout
+        - default-configuration
+        - run:
+            name: Get old stack workflow id
+            command: |
+              # Fetch the Old workflow ID
+              export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+              echo OldWorkflowID: "${OldWorkflowID}"
+              echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+              # Fetch the stack names          
+              export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+              echo Stack names: "${STACKS[@]}"  
+              export OldWorkflowID="the id here"
+              export STACKS=[] #put the list of stacks here
+        - run:
+            name: Remove old stacks and files
+            command: |
+              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+              then
+
+                aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+                aws cloudformation delete-stack --stack-name backend-${CIRCLE_WORKFLOW_ID:0:7}
+                aws cloudformation delete-stack --stack-name frontend-${CIRCLE_WORKFLOW_ID:0:7}
+              fi
 
 workflows:
   default:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [test-frontend]
-      # - scan-backend:
-      #     requires: [test-backend]
-      # - notifier:
-      # - notifier:
-      #     requires:
-      #       - scan-backend
-      #       - scan-frontend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [test-frontend]
+      - scan-backend:
+          requires: [test-backend]
+      - notifier:
+      - notifier:
+          requires:
+            - scan-backend
+            - scan-frontend
       - deploy-infrastructure:
           requires:
             # - notifier
@@ -484,3 +524,12 @@ workflows:
           requires:
             - deploy-backend
             - deploy-frontend
+      - cloudfront-update:
+          requires: 
+            - smoke-test
+      - cleanup:
+          type: approval 
+          requires: 
+            - cloudfront-update
+
+      
