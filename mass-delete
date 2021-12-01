@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for VARIABLE in 0e790eb 3db5619 ab41e80 bbb6996 d47ae61 da69f09
+do
+    aws s3 rm s3://udapeople-$VARIABLE --recursive --profile Admin
+    aws cloudformation delete-stack --stack-name udapeople-frontend-$VARIABLE --profile Admin
+    aws cloudformation delete-stack --stack-name udapeople-backend-$VARIABLE --profile Admin
+done
