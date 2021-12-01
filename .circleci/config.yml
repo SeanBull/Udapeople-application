@@ -369,6 +369,20 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: creating .env file for pm2 node
+          command: |
+            pwd
+            ls
+            echo ENVIRONMENT=production > backend/.env
+            echo TYPEORM_CONNECTION=postgres >> backend/.env
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> backend/.env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
+            echo TYPEORM_USERNAME= $TYPEORM_USERNAME >> backend/.env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
+            cat backend/.env
+      - run:
           name: Getting backend-URL
           command: |
             cd backend
@@ -378,20 +392,7 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
             chmod 644 artifact.tar.gz
             # - run:
-      #     name: creating .env file for pm2
-      #     command: |
-      #       pwd
-      #       ls
-      #       echo ENVIRONMENT=production > backend/.env
-      #       echo TYPEORM_CONNECTION=postgres >> backend/.env
-      #       echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> backend/.env
-      #       echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
-      #       echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
-      #       echo TYPEORM_USERNAME= $TYPEORM_USERNAME >> backend/.env
-      #       echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
-      #       echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
-      #       cat backend/.env
-      #       cd .circleci/ansible
+
       - run:
           name: ansible playbook run
           command: |

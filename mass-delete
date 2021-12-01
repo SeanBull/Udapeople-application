@@ -1,5 +1,6 @@
 #!/bin/bash
 
+            
 # for VARIABLE in 0e790eb 3db5619 ab41e80 bbb6996 d47ae61 da69f09
 for VARIABLE in "$@"
 do
