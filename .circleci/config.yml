@@ -499,15 +499,12 @@ workflows:
       - scan-backend:
           requires: [test-backend]
       - notifier:
-      - notifier:
           requires:
             - scan-backend
             - scan-frontend
       - deploy-infrastructure:
           requires:
-            # - notifier
-            - build-backend
-            - build-frontend
+            - notifier
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
