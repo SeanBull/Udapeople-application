@@ -257,7 +257,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - force-fail
       - run:
           name: install tar and gzip
           command: |

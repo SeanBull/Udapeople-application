@@ -1,7 +1,8 @@
 #!/bin/bash
 
-git-message=$1
 
 git add . 
-git commit -m "$git-message"
+echo hi there you rat, enter commit message ples:
+read git_message
+git commit -m "$git_message"
 git push origin master
