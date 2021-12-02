@@ -534,7 +534,6 @@ workflows:
             - smoke-test
       - cleanup-approval:
           type: approval
-          requires:
       - cloudfront-update:
           requires:
             - cleanup-approval
