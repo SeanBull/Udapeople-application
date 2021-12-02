@@ -4,6 +4,14 @@ orbs:
   slack: circleci/slack@4.1
 
 commands:
+  force-fail:
+    description: force a fail on any job
+    parameters:
+    steps:
+      - run:
+          name: force fail
+          command: |
+            return 1
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -249,6 +257,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - force-fail
       - run:
           name: install tar and gzip
           command: |
