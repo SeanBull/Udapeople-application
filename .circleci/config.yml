@@ -536,6 +536,6 @@ workflows:
             - smoke-test
       - cleanup-approval:
           type: approval
-      - clean-up:
+      - cleanup:
           requires:
             - cleanup-approval
