@@ -32,4 +32,5 @@
     - update-upgrade
     - python-install
     - node-install
+    - configure-server
     - configure-prometheus-node-exporter
