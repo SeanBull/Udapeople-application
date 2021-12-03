@@ -515,7 +515,7 @@ workflows:
             - notifier
           filters:
             branches:
-              only: [main]
+              only: [master]
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
