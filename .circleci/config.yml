@@ -498,7 +498,7 @@ workflows:
     jobs:
       - cleanup-approval:
           type: approval
-      - clean-up:
+      - cleanup:
           requires:
             - cleanup-approval
       - build-frontend
