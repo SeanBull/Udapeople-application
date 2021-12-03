@@ -1,7 +1,3 @@
-###links for udacity
-frontend : http://udapeople-c48b527.s3-website-us-east-1.amazonaws.com/#/employees
-backend: http://3.95.155.174:3030/api/status
-
 ## Give your Application Auto-Deploy Superpowers
 
 In this project, you will prove your mastery of the following learning objectives:

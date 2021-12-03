@@ -1,0 +1,2 @@
+github: https://github.com/SeanBull/udacity-project-3.git
+bucket: http://udapeople-3196517.s3-website-us-east-1.amazonaws.com/#/employees
